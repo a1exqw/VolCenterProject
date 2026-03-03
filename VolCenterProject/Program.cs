@@ -8,10 +8,34 @@ namespace VolCenterProject
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            bool exitProgram = false;
+
+            while (!exitProgram)
+            {
+                using (var formLogin = new FormLogin())
+                {
+                    if (formLogin.ShowDialog() == DialogResult.OK)
+                    {
+                        using (var formEventsView = new FormEventsView(
+                            formLogin.CurrentUser,
+                            formLogin.isGuest))
+                        {
+                            if (formEventsView.ShowDialog() == DialogResult.Cancel)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                exitProgram = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        exitProgram = true;
+                    }
+                }
+            }
         }
     }
 }
